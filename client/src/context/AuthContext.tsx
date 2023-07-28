@@ -1,0 +1,82 @@
+import { createContext, useContext, useEffect } from "react";
+import {
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  getRedirectResult,
+  signInWithRedirect,
+  signOut
+} from "firebase/auth";
+import { auth } from "../firebase/firebaseConfig";
+import { useLocation } from "wouter"
+import { useAppDispatch } from "../redux/hooks";
+import { login } from "../redux/features/authSlice";
+
+interface AuthContextType {
+  loginWithGoogle: () => Promise<void>;
+  loginWithFacebook: () => Promise<void>;
+  logout: () => Promise<void>;
+}
+
+export const AuthContext = createContext<AuthContextType | null>(null);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("There is not auth provider");
+  return context;
+};
+
+export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const [_, setLocation] = useLocation();
+  const dispatch = useAppDispatch()
+  
+  const loginWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithRedirect(auth, provider);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const loginWithFacebook = async () => {
+    try {
+      const provider = new FacebookAuthProvider();
+      await signInWithRedirect(auth, provider);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const logout = async () => {
+    await signOut(auth);
+  }
+  
+  const authContextValue: AuthContextType = {
+    loginWithGoogle,
+    loginWithFacebook,
+    logout
+  }
+
+  useEffect(() => {
+    getRedirectResult(auth).then((result) => {
+      if (result && result.user.displayName) {
+        const firstName = result.user.displayName.split(" ")[0];
+        const lastName = result.user.displayName.split(" ")[1];
+        const userData = {
+          firstName,
+          lastName,
+          email: result.user.email,
+          image: result.user.photoURL
+        };
+        dispatch(login({ user: userData }));
+        setLocation("/");
+      }
+    });
+  });
+
+  return (
+    <AuthContext.Provider value={authContextValue}>
+      {children}
+    </AuthContext.Provider>
+  );
+};

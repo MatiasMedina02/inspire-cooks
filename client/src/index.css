@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Rubik+Mono+One&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", sans-serif;
+  }
+  h1 {
+		font-family: 'Rubik Mono One', sans-serif;
+    @apply text-3xl;
+  }
+  h2 {
+    @apply text-2xl font-bold;
+  }
+  h3 {
+    @apply text-xl font-bold;
+  }
+  h4,
+  label {
+    @apply text-lg font-bold;
+  }
+  p,
+  span {
+    @apply text-base font-bold;
+  }
+  a {
+    @apply decoration-transparent;
+  }
+}
