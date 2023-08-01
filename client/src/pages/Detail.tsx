@@ -29,15 +29,21 @@ const Detail: React.FC<Props> = ({ id }) => {
   const url = window.location.href;
   const [_, setLocation] = useLocation();
   const [comment, setComment] = useState<string>("");
+  const [showButtons, setShowButtons] = useState(false);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setComment(event.target.value);
   };
 
+  const handlePrint = () => {
+    const printUrl = `/print/${data?._id}`;
+    window.open(printUrl, "_blank");
+  };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      if (!userData) {
+      if (!userData.user) {
         setLocation("/login");
       }
       if (!comment.length) {
@@ -88,6 +94,20 @@ const Detail: React.FC<Props> = ({ id }) => {
               </div>
               <p>{data.description}</p>
             </div>
+            <div className="bg-slate-200 mt-4 p-4 rounded-lg flex justify-between">
+              <div className="">
+                <h3>Prep Time:</h3>
+                <span>{data.prepTime} min</span>
+              </div>
+              <div className="">
+                <h3>Cook Time:</h3>
+                <span>{data.cookTime} min</span>
+              </div>
+              <div className="">
+                <h3>Servings:</h3>
+                <span>{data.servings}</span>
+              </div>
+            </div>
             <div className="bg-slate-200 mt-4 p-4 rounded-lg">
               <h2 className="uppercase">Ingredients</h2>
               <ul className="list-disc ml-4">
@@ -100,9 +120,9 @@ const Detail: React.FC<Props> = ({ id }) => {
             </div>
             <div className="bg-slate-200 mt-4 p-4 rounded-lg">
               <h2 className="uppercase">Instructions</h2>
-              {data.instructions.map((instruction) => (
+              {data.instructions.map((instruction, index) => (
                 <div className="" key={instruction.order}>
-                  <h3>Step {instruction.order}</h3>
+                  <h3>Step {index + 1}</h3>
                   <p>{instruction.step}</p>
                 </div>
               ))}
@@ -162,8 +182,14 @@ const Detail: React.FC<Props> = ({ id }) => {
           {/* Links */}
           <div className="w-1/3 relative">
             <div className="fixed flex flex-col">
-              <h2 className="uppercase">Share</h2>
-              <div className="flex">
+              <button
+                className={showButtons ? "hidden" : "mt-2 py-2 px-20 rounded-lg bg-orange-500"}
+                type="button"
+                onClick={() => setShowButtons(true)}
+              >
+                <span>Share</span>
+              </button>
+              <div className={showButtons ? "flex" : "hidden"}>
                 <WhatsappShareButton title={data.title} url={url}>
                   <WhatsappIcon round={true} size={40} />
                 </WhatsappShareButton>
@@ -184,10 +210,17 @@ const Detail: React.FC<Props> = ({ id }) => {
                   <TelegramIcon round={true} size={40} />
                 </TelegramShareButton>
               </div>
-              <button className="mt-2 p-2 rounded-lg bg-orange-500" type="button">
+              <button
+                className="mt-2 py-2 px-20 rounded-lg bg-orange-500"
+                type="button"
+              >
                 <span>Save</span>
               </button>
-              <button className="mt-2 p-2 rounded-lg bg-orange-500" type="button" onClick={() => window.print()}>
+              <button
+                className="mt-2 py-2 px-20 rounded-lg bg-orange-500"
+                type="button"
+                onClick={handlePrint}
+              >
                 <span>Print</span>
               </button>
             </div>

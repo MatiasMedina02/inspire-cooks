@@ -11,6 +11,7 @@ import { useLocation } from "wouter";
 import { useAppDispatch } from "../redux/hooks";
 import { login } from "../redux/features/authSlice";
 import { useRegisterUserMutation } from "../redux/services/usersApi";
+import { toast } from "react-toastify";
 
 interface AuthContextType {
   loginWithGoogle: () => Promise<void>;
@@ -50,7 +51,9 @@ export const AuthContextProvider = ({
         register(userData);
       }
     } catch (error) {
-      console.error(error);
+      toast.error("You have registered with another method", {
+        autoClose: 3000
+      });
     }
   };
 

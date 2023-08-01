@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import Detail from "./pages/Detail";
 import CreateRecipe from "./pages/CreateRecipe";
 import PageNotFound from "./pages/PageNotFound";
+import PrintRecipe from "./pages/PrintRecipe";
 
 const App: React.FC = () => {
   const [location, _] = useLocation();
@@ -30,6 +31,9 @@ const App: React.FC = () => {
         <Route path="/" component={Home} />
         <Route path="/recipe/:id">
           {(params) => <Detail id={params.id} />}
+        </Route>
+        <Route path="/print/:id">
+          {(params) => <PrintRecipe id={params.id} />}
         </Route>
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />

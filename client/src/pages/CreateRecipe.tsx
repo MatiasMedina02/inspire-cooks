@@ -25,7 +25,6 @@ const CreateRecipe: React.FC = () => {
   const userData = useAppSelector(
     (state) => state.persistedReducer.user.userData
   );
-  console.log(userData);
   
   const [postRecipe, { isError, isSuccess, isLoading }] =
     usePostRecipeMutation();
@@ -172,10 +171,9 @@ const CreateRecipe: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      // console.log({ recipe: dataRecipe, userId: /*userData.user._id*/ "64bfed7951d864b9351f4ed0" });
       await postRecipe({
         recipe: dataRecipe,
-        userId: /*userData.user._id*/ "64bfed7951d864b9351f4ed0",
+        userId: userData?.user._id,
       });
     } catch (error) {
       console.error(error);

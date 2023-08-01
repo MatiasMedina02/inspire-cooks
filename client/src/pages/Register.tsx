@@ -120,6 +120,12 @@ const Register: React.FC = () => {
             <span className="text-red-600">{errors.password.message}</span>
           )}
         </div>
+
+        <div className="flex items-center py-2">
+          <input type="checkbox" className="form-checkbox h-5 w-5 text-indigo-600 mr-2" />
+          <span>I accept the Terms and Condition and the Privacy Policy</span>
+        </div>
+        
         <button className="my-3 p-2 bg-orange-500 rounded" type="submit">
           <span className="text-white">Sign Up</span>
         </button>
