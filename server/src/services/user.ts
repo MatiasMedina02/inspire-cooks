@@ -1,12 +1,13 @@
-import { IUser } from "../types";
+import { ICreateUser } from "../types";
 import UserModel from "../models/User";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import cloudinary from "../utils/cloudinary";
 
 const JWT_SECRET = process.env.JWT_SECRET || "jsiow82ka";
 
 export const registerUser = async (
-  { firstName, lastName, email, password, image }: IUser,
+  { firstName, lastName, email, password, image }: ICreateUser,
 ) => {
   if (password) {
     const userExists = await UserModel.findOne({ email });
@@ -20,20 +21,25 @@ export const registerUser = async (
     });
   } else {
 		const userExists = await UserModel.findOne({ email });
-    if (userExists) throw new Error("User already exists");
+    if (userExists) return userExists;
+
+    const userImage = await cloudinary.uploader.upload(image, {
+      folder: "users",
+    });
+
     const userData = await UserModel.create({
       firstName,
       lastName,
       email,
-      image,
+      image: { public_id: userImage.public_id, url: userImage.url },
     });		
-    return { userData };
+    return userData;
   }
 
   return "User created successfully";
 };
 
-export const loginUser = async ({ email, password }: IUser) => {
+export const loginUser = async ({ email, password }: ICreateUser) => {
   const userExists = await UserModel.findOne({ email });
   if (!userExists) throw new Error("Email or Password is wrong");
 

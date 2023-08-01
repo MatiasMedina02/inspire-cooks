@@ -7,7 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
-import { useAppDispatch } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { login } from "../redux/features/authSlice";
 import LogoApp from "../assets/logo-app.png";
 import { useAuth } from "../context/AuthContext";
@@ -26,10 +26,11 @@ const Login: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginData>({ mode: "onChange", resolver: yupResolver(schema) });
-  const [loginForm, { isLoading, isError, isSuccess, data }] = useLoginUserMutation({});
+  const [loginForm, { isLoading: loading, isError, isSuccess, data }] = useLoginUserMutation({});
   const [_, setLocation] = useLocation();
   const dispatch = useAppDispatch();
   const { loginWithGoogle, loginWithFacebook } = useAuth();
+  const userData = useAppSelector(state => state.persistedReducer.user.userData);
 
   const onSubmit = async (user: LoginData) => {
     try {
@@ -64,13 +65,13 @@ const Login: React.FC = () => {
     if (isSuccess) {
       dispatch(login(data));
       setLocation("/");
-      toast.success("Welcome", {
+      toast.success(`Welcome ${userData?.user?.firstName} ${userData?.user?.lastName}`, {
         autoClose: 3000,
       });
     }
   }, [isError, isSuccess]);
 
-  if (isLoading){
+  if (loading){
     return <Spinner />
   };
 

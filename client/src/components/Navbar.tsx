@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { logout as logoutUser } from "../redux/features/authSlice";
+import { toast } from "react-toastify";
 
 const Navbar: React.FC = () => {
   const userData = useAppSelector(
@@ -21,6 +22,9 @@ const Navbar: React.FC = () => {
       await logout();
       dispatch(logoutUser());
       setLocation("/");
+      toast.success("Session closed successfully", {
+        autoClose: 3000
+      })
       setShowOptions(false);
     } catch (error) {
       console.error(error);
@@ -85,7 +89,7 @@ const Navbar: React.FC = () => {
           <li>
             <Link
               className="flex items-end cursor-pointer space-x-1 mx-2"
-              href={userData?.user.email ? "/create" : "/login"}
+              href={userData?.user?.email ? "/create" : "/login"}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +108,7 @@ const Navbar: React.FC = () => {
           </li>
         </ul>
 
-        {userData?.user.email ? (
+        {userData?.user?.email ? (
           <button
             className="flex items-center"
             onClick={() => setShowOptions(!showOptions)}
@@ -112,8 +116,8 @@ const Navbar: React.FC = () => {
           >
             <img
               className="w-8 rounded-full"
-              src={userData?.user.image}
-              alt=""
+              src={userData?.user?.image.url}
+              alt={userData?.user?.email}
             />
             <span className="flex items-center px-2">
               Perfil

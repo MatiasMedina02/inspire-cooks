@@ -78,7 +78,7 @@ const Detail: React.FC<Props> = ({ id }) => {
               <div className="flex">
                 <img
                   className="w-8 rounded-full"
-                  src={data.author.image}
+                  src={data.author.image.url}
                   alt={data.author.firstName}
                 />
                 <h3>
@@ -113,11 +113,11 @@ const Detail: React.FC<Props> = ({ id }) => {
                 className="w-full flex items-center my-2"
                 onSubmit={handleSubmit}
               >
-                {userData?.user.image ? (
+                {userData?.user?.image ? (
                   <img
                     className="w-10 rounded-full"
-                    src={userData?.user.image}
-                    alt={userData?.user.email}
+                    src={userData?.user?.image.url}
+                    alt={userData?.user?.email}
                   />
                 ) : (
                   <svg

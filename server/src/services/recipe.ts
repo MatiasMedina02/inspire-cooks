@@ -29,6 +29,9 @@ export const postRecipe = async ({
   instructions,
   ingredients,
   category,
+  prepTime,
+  cookTime,
+  servings
 }: ICreateRecipe, userId: string) => {
   const recipeExists = await RecipeModel.findOne({ title });
   if (recipeExists) throw new Error("Recipe already exists");
@@ -36,17 +39,21 @@ export const postRecipe = async ({
   const user = await UserModel.findById(userId);
   if(!user) throw new Error("User not found");
 
-  const result = await cloudinary.uploader.upload(image, {
+  const recipeImage = await cloudinary.uploader.upload(image, {
     folder: "recipes",
   });
 
   const newRecipe = await RecipeModel.create({
     title,
     description,
-    image: { public_id: result.public_id, url: result.secure_url },
+    image: { public_id: recipeImage.public_id, url: recipeImage.secure_url },
     ingredients,
     instructions,
     category,
+    prepTime,
+    cookTime,
+    totalTime: prepTime + cookTime,
+    servings,
     author: user._id,
   });
 
@@ -73,7 +80,7 @@ export const deleteRecipe = async (id: string) => {
 
 export const updateRecipe = async (
   id: string,
-  { title, description, image, instructions, ingredients, category }: ICreateRecipe
+  { title, description, image, instructions, ingredients, category, prepTime, cookTime, servings }: ICreateRecipe
 ) => {
   const recipeFound = await RecipeModel.findById(id);
   if (!recipeFound) throw new Error("Recipe not found");
@@ -84,6 +91,9 @@ export const updateRecipe = async (
     instructions,
     ingredients,
     category,
+    prepTime,
+    cookTime,
+    servings
   };
 
   if (recipeFound.image && recipeFound.image.public_id) {

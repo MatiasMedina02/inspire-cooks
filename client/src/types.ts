@@ -8,7 +8,7 @@ export type Ingredient = {
 	type: string;
 }
 
-export type ImageRecipe = {
+export type ImageCloudinary = {
   public_id: string
 	url: string
 }
@@ -30,6 +30,9 @@ export interface IRecipe {
 	ingredients: Ingredient[];
 	instructions: Instruction[];
   category: RecipeCategory;
+  prepTime: number;
+  cookTime: number;
+  servings: number; 
 }
 
 export interface ICreateRecipe extends IRecipe {
@@ -38,7 +41,7 @@ export interface ICreateRecipe extends IRecipe {
 
 export interface IRecipeWithId extends IRecipe {
   _id: string;
-  image: ImageRecipe;
+  image: ImageCloudinary;
   author: User
 }
 
@@ -51,7 +54,7 @@ export interface RegisterData {
 
 export interface User extends RegisterData {
   _id: string;
-  image: string;
+  image: ImageCloudinary;
 }
 
 export type LoginData = {

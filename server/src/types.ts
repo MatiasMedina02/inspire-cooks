@@ -31,12 +31,24 @@ export enum RecipeCategory {
   Breakfasts = 'Breakfasts',
 }
 
+export interface ImageCloudinary {
+	public_id: string;
+	url: string;
+}
+
 export interface IUser {
 	firstName: string;
 	lastName: string;
 	email: string;
 	password: string;
-	image: string;
+}
+
+export interface ICreateUser extends IUser {
+	image: string
+}
+
+export interface IUpdateUser extends IUser {
+	image: ImageCloudinary
 }
 
 export interface IRecipe {
@@ -45,15 +57,13 @@ export interface IRecipe {
 	ingredients: Ingredient[];
 	instructions: Instruction[];
 	category: RecipeCategory;
-}
-
-export interface ImageRecipe {
-	public_id: string;
-	url: string;
+	prepTime: number;
+  cookTime: number;
+  servings: number; 
 }
 
 export interface IUpdateRecipe extends IRecipe {
-	image: ImageRecipe
+	image: ImageCloudinary
 }
 
 export interface ICreateRecipe extends IRecipe {

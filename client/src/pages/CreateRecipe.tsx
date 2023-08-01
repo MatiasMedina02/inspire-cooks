@@ -18,10 +18,15 @@ const CreateRecipe: React.FC = () => {
     ingredients: [],
     instructions: [],
     category: RecipeCategory.Desserts,
+    prepTime: 0,
+    cookTime: 0,
+    servings: 0,
   });
   const userData = useAppSelector(
     (state) => state.persistedReducer.user.userData
   );
+  console.log(userData);
+  
   const [postRecipe, { isError, isSuccess, isLoading }] =
     usePostRecipeMutation();
   const [inputIngredients, setInputIngredients] = useState<Ingredient[]>([
@@ -56,6 +61,9 @@ const CreateRecipe: React.FC = () => {
   };
 
   const handleRemoveIngredient = (ingredientId: number) => {
+    if(inputIngredients.length === 1){
+      return;
+    }
     setInputIngredients((prevIngredients) =>
       prevIngredients.filter((ingredient) => ingredient.id !== ingredientId)
     );
@@ -102,6 +110,9 @@ const CreateRecipe: React.FC = () => {
   };
 
   const handleRemoveInstruction = (orderId: number) => {
+    if(inputInstructions.length === 1){
+      return;
+    }
     setInputInstructions((prevInstructions) =>
       prevInstructions.filter((instruction) => instruction.order !== orderId)
     );
@@ -184,12 +195,12 @@ const CreateRecipe: React.FC = () => {
     }
   }, [isError, isSuccess]);
 
-  if (isLoading){
-    return <Spinner />
+  if (isLoading) {
+    return <Spinner />;
   }
 
   return (
-    <div className="w-full min-h-screen pt-20 px-80 flex flex-col items-center">
+    <div className="w-2/3 min-h-screen pt-20 flex flex-col items-center mx-auto">
       <ToastContainer />
       <form className="w-full" onSubmit={handleSubmit}>
         {/* Image */}
@@ -244,6 +255,31 @@ const CreateRecipe: React.FC = () => {
             name="description"
             onChange={handleChange}
           ></textarea>
+
+          {/* Additional Info */}
+          <div className="w-full flex justify-between items-center space-x-4 pt-4">
+            <input
+              className="w-1/3 rounded-md py-2 px-4 focus:outline-none"
+              type="number"
+              name="prepTime"
+              placeholder="Prep Time"
+              onChange={handleChange}
+            />
+            <input
+              className="w-1/3 rounded-md py-2 px-4 focus:outline-none"
+              type="number"
+              name="cookTime"
+              placeholder="Cook Time"
+              onChange={handleChange}
+            />
+            <input
+              className="w-1/3 rounded-md py-2 px-4 focus:outline-none"
+              type="number"
+              name="servings"
+              placeholder="Servings"
+              onChange={handleChange}
+            />
+          </div>
 
           {/* Category */}
           <div className="w-full">

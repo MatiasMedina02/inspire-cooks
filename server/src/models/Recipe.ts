@@ -1,14 +1,18 @@
 import { Schema, model, Document } from "mongoose"
-import { IUser, ImageRecipe, RecipeCategory } from "../types";
+import { IUser, ImageCloudinary, RecipeCategory } from "../types";
 
 interface IRecipe extends Document {
 	title: string;
 	description: string;
-	image: ImageRecipe;
+	image: ImageCloudinary;
 	ingredients: object[];
 	instructions: object[];
 	category: RecipeCategory;
-	author: IUser
+	prepTime: number;
+  cookTime: number;
+	totalTime: number;
+  servings: number;
+	author: IUser;
 }
 
 const recipeSchema = new Schema<IRecipe>({
@@ -41,6 +45,22 @@ const recipeSchema = new Schema<IRecipe>({
 	category: {
 		type: String,
 		enum: Object.values(RecipeCategory),
+		required: true
+	},
+	prepTime: {
+		type: Number,
+		required: true
+	},
+	cookTime: {
+		type: Number,
+		required: true
+	},
+	totalTime: {
+		type: Number,
+		required: true
+	},
+	servings: {
+		type: Number,
 		required: true
 	},
 	author: {

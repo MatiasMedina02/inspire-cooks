@@ -4,12 +4,13 @@ import {
   GoogleAuthProvider,
   getRedirectResult,
   signInWithRedirect,
-  signOut
+  signOut,
 } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
-import { useLocation } from "wouter"
+import { useLocation } from "wouter";
 import { useAppDispatch } from "../redux/hooks";
 import { login } from "../redux/features/authSlice";
+import { useRegisterUserMutation } from "../redux/services/usersApi";
 
 interface AuthContextType {
   loginWithGoogle: () => Promise<void>;
@@ -25,10 +26,34 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [_, setLocation] = useLocation();
-  const dispatch = useAppDispatch()
-  
+  const dispatch = useAppDispatch();
+  const [register, { data, isSuccess }] = useRegisterUserMutation();
+
+  const getUserData = async () => {
+    try {
+      const result = await getRedirectResult(auth);
+      if (result && result.user.displayName) {
+        const firstName = result.user.displayName.split(" ")[0];
+        const lastName = result.user.displayName.split(" ")[1];
+        const userData = {
+          firstName,
+          lastName,
+          email: result.user.email,
+          image: result.user.photoURL,
+        };
+        register(userData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const loginWithGoogle = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -49,30 +74,24 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
 
   const logout = async () => {
     await signOut(auth);
-  }
-  
+  };
+
   const authContextValue: AuthContextType = {
     loginWithGoogle,
     loginWithFacebook,
-    logout
-  }
+    logout,
+  };
 
   useEffect(() => {
-    getRedirectResult(auth).then((result) => {
-      if (result && result.user.displayName) {
-        const firstName = result.user.displayName.split(" ")[0];
-        const lastName = result.user.displayName.split(" ")[1];
-        const userData = {
-          firstName,
-          lastName,
-          email: result.user.email,
-          image: result.user.photoURL
-        };
-        dispatch(login({ user: userData }));
-        setLocation("/");
-      }
-    });
-  });
+    getUserData();
+  }, []);
+
+  useEffect(() => {
+    if(isSuccess){
+      dispatch(login({ user: data }));
+      setLocation("/");
+    }
+  }, [isSuccess]);
 
   return (
     <AuthContext.Provider value={authContextValue}>
