@@ -46,7 +46,6 @@ const userSchema = new Schema<IUser>({
 		ref: "Recipe"
 	}],
 }, {
-	timestamps: false,
 	versionKey: false,
 });
 

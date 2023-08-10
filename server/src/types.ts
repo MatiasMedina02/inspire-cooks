@@ -69,3 +69,8 @@ export interface IUpdateRecipe extends IRecipe {
 export interface ICreateRecipe extends IRecipe {
 	image: string
 }
+
+export interface ICommment {
+	text: string;
+	author: IUser;
+}

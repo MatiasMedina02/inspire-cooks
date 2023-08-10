@@ -3,6 +3,7 @@ import RecipeModel from "../models/Recipe";
 import cloudinary from "../utils/cloudinary";
 import UserModel from "../models/User";
 import { Types } from "mongoose";
+import CommentModel from "../models/Comment";
 
 export const getAllRecipes = async () => {
   const allRecipes = await RecipeModel.find({});
@@ -11,13 +12,16 @@ export const getAllRecipes = async () => {
 };
 
 export const getRecipeById = async (id: string) => {
-  const recipeFound = await RecipeModel.findById(id);
+  const recipeFound = await RecipeModel.findById(id).populate("author").exec();
   if (!recipeFound) throw new Error("Recipe not found");
 
-  const author = await UserModel.findById(recipeFound.author);
-  if(!author) throw new Error("Author not found");
+  // const author = await UserModel.findById(recipeFound.author);
+  // if(!author) throw new Error("Author not found");
 
-  recipeFound.author = author;
+  const comments = await CommentModel.find({ _id: { $in: recipeFound.comments } }).populate("author").exec();
+
+  // recipeFound.author = author;
+  recipeFound.comments = comments;
 
   return recipeFound;
 };

@@ -1,5 +1,5 @@
 import { Schema, model, Document } from "mongoose"
-import { IUser, ImageCloudinary, RecipeCategory } from "../types";
+import { ICommment, IUser, ImageCloudinary, RecipeCategory } from "../types";
 
 interface IRecipe extends Document {
 	title: string;
@@ -13,6 +13,7 @@ interface IRecipe extends Document {
 	totalTime: number;
   servings: number;
 	author: IUser;
+	comments: ICommment[];
 }
 
 const recipeSchema = new Schema<IRecipe>({
@@ -67,8 +68,11 @@ const recipeSchema = new Schema<IRecipe>({
 		type: Schema.Types.ObjectId,
 		ref: "User"
 	},
+	comments: [{
+		type: Schema.Types.ObjectId,
+		ref: "Comment"
+	}],
 }, {
-	timestamps: false,
 	versionKey: false,
 });
 
