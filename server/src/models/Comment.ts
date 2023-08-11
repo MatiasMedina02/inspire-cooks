@@ -18,6 +18,7 @@ const commentSchema = new Schema<IComment>({
 	},
 }, {
 	versionKey: false,
+	timestamps: true
 })
 
 const CommentModel = model<IComment>("Comment", commentSchema);

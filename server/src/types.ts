@@ -70,7 +70,7 @@ export interface ICreateRecipe extends IRecipe {
 	image: string
 }
 
-export interface ICommment {
+export interface IComment {
 	text: string;
 	author: IUser;
 }

@@ -42,7 +42,8 @@ export interface ICreateRecipe extends IRecipe {
 export interface IRecipeWithId extends IRecipe {
   _id: string;
   image: ImageCloudinary;
-  author: User
+  author: User;
+  comments: IGetComment[]
 }
 
 export interface RegisterData {
@@ -66,3 +67,21 @@ export type UserData = {
   token: string;
   user: User;
 };
+
+export interface IComment {
+	text: string;
+	author: string;
+}
+
+export interface IGetComment {
+  _id: string;
+  text: string;
+  createdAt: Date;
+  author: User;
+}
+
+export interface IPostComment {
+	idRecipe: string;
+	comment: IComment;
+}
+

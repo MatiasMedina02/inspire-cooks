@@ -15,12 +15,8 @@ export const getRecipeById = async (id: string) => {
   const recipeFound = await RecipeModel.findById(id).populate("author").exec();
   if (!recipeFound) throw new Error("Recipe not found");
 
-  // const author = await UserModel.findById(recipeFound.author);
-  // if(!author) throw new Error("Author not found");
+  const comments = await CommentModel.find({ _id: { $in: recipeFound.comments } }).sort({ createdAt: -1 }).populate("author").exec();
 
-  const comments = await CommentModel.find({ _id: { $in: recipeFound.comments } }).populate("author").exec();
-
-  // recipeFound.author = author;
   recipeFound.comments = comments;
 
   return recipeFound;

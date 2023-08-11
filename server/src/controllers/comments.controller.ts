@@ -3,7 +3,7 @@ import { postComment } from "../services/comment";
 
 export const postCommentController: RequestHandler = async (req, res) => {
 	const { idRecipe } = req.params;
-	const { comment } = req.body;
+	const comment = req.body;
 
 	try {
 		const response = await postComment(idRecipe, comment);

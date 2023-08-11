@@ -1,7 +1,7 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Spinner from "../components/Spinner";
 import { useAppSelector } from "../redux/hooks";
-import { useGetRecipeByIdQuery } from "../redux/services/recipesApi";
+import { useGetRecipeByIdQuery, usePostCommentMutation } from "../redux/services/recipesApi";
 import {
   WhatsappShareButton,
   WhatsappIcon,
@@ -16,6 +16,7 @@ import {
 } from "react-share";
 import { useLocation } from "wouter";
 import { toast, ToastContainer } from "react-toastify";
+import { IComment } from "../types";
 
 type Props = {
   id: string;
@@ -23,12 +24,15 @@ type Props = {
 
 const Detail: React.FC<Props> = ({ id }) => {
   const { data, isLoading, isError } = useGetRecipeByIdQuery(id);
+  const [postComment, { isLoading: loadingComment , isError: errorComment, isSuccess: successComment }] = usePostCommentMutation();
   const userData = useAppSelector(
     (state) => state.persistedReducer.user.userData
   );
+  console.log(data);
+  
   const url = window.location.href;
   const [_, setLocation] = useLocation();
-  const [comment, setComment] = useState<string>("");
+  const [comment, setComment] = useState<string>("");  
   const [showButtons, setShowButtons] = useState(false);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +44,7 @@ const Detail: React.FC<Props> = ({ id }) => {
     window.open(printUrl, "_blank");
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       if (!userData.user) {
@@ -53,11 +57,32 @@ const Detail: React.FC<Props> = ({ id }) => {
         });
         return;
       }
-      console.log(comment);
+
+      const sendComment: IComment = {
+        text: comment,
+        author: userData?.user?._id
+      }
+      
+      await postComment({ idRecipe: id, comment: sendComment });
+
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if(successComment){
+      setComment("");
+      toast.success("Comment submitted", {
+        autoClose: 2000,
+      });
+    }
+    if(errorComment){
+      toast.error("Error sending comment", {
+        autoClose: 2000,
+      })
+    }
+  }, [successComment, errorComment]);
 
   if (isLoading) {
     return <Spinner />;
@@ -157,10 +182,28 @@ const Detail: React.FC<Props> = ({ id }) => {
                   <input
                     className="w-full mx-2 p-2 rounded-xl focus:outline-none"
                     placeholder="Add a comment"
+                    value={comment}
                     onChange={handleChange}
                     type="text"
                   />
                   <button className="absolute right-3" type="submit">
+                    {loadingComment ? (
+                      <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      className={`w-6 h-6 animate-spin`}
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                    </svg>
+                    ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -173,9 +216,28 @@ const Detail: React.FC<Props> = ({ id }) => {
                         d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
                       />
                     </svg>
+                    )}
                   </button>
                 </div>
               </form>
+
+              {/* Comments */}
+              {data.comments.length ? (
+                data.comments.map(comment => (
+                  <div key={comment._id}>
+                    <div className="flex items-center">
+                      <img className="w-8 rounded-full" src={comment.author.image.url} alt={comment.author.email} />
+                      <h4>{comment.author.firstName} {comment.author.lastName}</h4>
+                    </div>
+                    <p>{comment.author.email}</p>
+                    <span>{comment.text}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="w-full">
+                  <h2>No hay comentarios</h2>
+                </div>
+              )}
             </div>
           </div>
 

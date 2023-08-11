@@ -17,6 +17,7 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<void>;
   loginWithFacebook: () => Promise<void>;
   logout: () => Promise<void>;
+  isLoading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -34,7 +35,7 @@ export const AuthContextProvider = ({
 }) => {
   const [_, setLocation] = useLocation();
   const dispatch = useAppDispatch();
-  const [register, { data, isSuccess }] = useRegisterUserMutation();
+  const [register, { data, isSuccess, isLoading }] = useRegisterUserMutation();
 
   const getUserData = async () => {
     try {
@@ -83,6 +84,7 @@ export const AuthContextProvider = ({
     loginWithGoogle,
     loginWithFacebook,
     logout,
+    isLoading
   };
 
   useEffect(() => {

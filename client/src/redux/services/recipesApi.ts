@@ -1,19 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { ICreateRecipe, IRecipeWithId } from "../../types"
+import { IComment, ICreateRecipe, IPostComment, IRecipeWithId } from "../../types"
 
 export const recipesApi = createApi({
 	reducerPath: "recipesApi",
 	baseQuery: fetchBaseQuery({
 		baseUrl: "http://localhost:3001",
 	}),
-	tagTypes: ["Recipes"],
+	tagTypes: ["Recipes", "RecipeWithId"],
 	endpoints: (builder) => ({
 		getAllRecipes: builder.query<IRecipeWithId[], null>({
 			query: () => "/recipes",
 			providesTags: ["Recipes"],
 		}),
 		getRecipeById: builder.query<IRecipeWithId, string>({
-			query: (id: string) => `recipes/${id}`,
+			query: (id: string) => `/recipes/${id}`,
+			providesTags: ["RecipeWithId"],
 		}),
 		postRecipe: builder.mutation<ICreateRecipe, object>({
 			query: (recipe) => ({
@@ -23,7 +24,15 @@ export const recipesApi = createApi({
 			}),
 			invalidatesTags: ["Recipes"]
 		}),
+		postComment: builder.mutation<IComment, IPostComment>({
+			query: ({ idRecipe, comment }) => ({
+				url: `/comments/${idRecipe}`,
+				method: "POST",
+				body: comment
+			}),
+			invalidatesTags: ["RecipeWithId"]
+		})
 	})
 })
 
-export const { useGetAllRecipesQuery, usePostRecipeMutation, useGetRecipeByIdQuery } = recipesApi
+export const { useGetAllRecipesQuery, usePostRecipeMutation, useGetRecipeByIdQuery, usePostCommentMutation } = recipesApi
