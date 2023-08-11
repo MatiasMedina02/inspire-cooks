@@ -56,6 +56,8 @@ export interface RegisterData {
 export interface User extends RegisterData {
   _id: string;
   image: ImageCloudinary;
+  recipes: string[];
+  favorites: string[];
 }
 
 export type LoginData = {
@@ -85,3 +87,7 @@ export interface IPostComment {
 	comment: IComment;
 }
 
+export interface IFavRecipe {
+	idRecipe: string;
+	idUser: string;
+}

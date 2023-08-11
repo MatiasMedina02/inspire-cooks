@@ -8,6 +8,7 @@ interface IUser extends Document {
 	password: string;
 	image: ImageCloudinary;
 	recipes: IRecipe[];
+	favorites: IRecipe[];
 }
 
 const userSchema = new Schema<IUser>({
@@ -42,6 +43,10 @@ const userSchema = new Schema<IUser>({
 		},
 	},
 	recipes: [{
+		type: Schema.Types.ObjectId,
+		ref: "Recipe"
+	}],
+	favorites: [{
 		type: Schema.Types.ObjectId,
 		ref: "Recipe"
 	}],

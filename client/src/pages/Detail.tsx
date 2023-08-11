@@ -17,6 +17,7 @@ import {
 import { useLocation } from "wouter";
 import { toast, ToastContainer } from "react-toastify";
 import { IComment } from "../types";
+import { useFav } from "../hooks/useFav";
 
 type Props = {
   id: string;
@@ -24,20 +25,28 @@ type Props = {
 
 const Detail: React.FC<Props> = ({ id }) => {
   const { data, isLoading, isError } = useGetRecipeByIdQuery(id);
-  const [postComment, { isLoading: loadingComment , isError: errorComment, isSuccess: successComment }] = usePostCommentMutation();
-  const userData = useAppSelector(
-    (state) => state.persistedReducer.user.userData
-  );
-  console.log(data);
-  
+  const [postComment, { isLoading: loadingComment, isError: errorComment, isSuccess: successComment }] = usePostCommentMutation();
+  const userData = useAppSelector((state) => state.persistedReducer.user.userData);
+  const isRecipeInFavorites = userData?.user?.favorites.includes(id);
+  const { handleAddFav, handleRemoveFav } = useFav();
   const url = window.location.href;
   const [_, setLocation] = useLocation();
-  const [comment, setComment] = useState<string>("");  
+  const [comment, setComment] = useState<string>("");
   const [showButtons, setShowButtons] = useState(false);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setComment(event.target.value);
   };
+
+  const addFav = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.stopPropagation();
+		handleAddFav(id, userData?.user?._id);
+	}
+
+	const removeFav = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.stopPropagation();
+		handleRemoveFav(id, userData?.user?._id);
+	}
 
   const handlePrint = () => {
     const printUrl = `/print/${data?._id}`;
@@ -62,7 +71,7 @@ const Detail: React.FC<Props> = ({ id }) => {
         text: comment,
         author: userData?.user?._id
       }
-      
+
       await postComment({ idRecipe: id, comment: sendComment });
 
     } catch (error) {
@@ -71,13 +80,13 @@ const Detail: React.FC<Props> = ({ id }) => {
   };
 
   useEffect(() => {
-    if(successComment){
+    if (successComment) {
       setComment("");
       toast.success("Comment submitted", {
         autoClose: 2000,
       });
     }
-    if(errorComment){
+    if (errorComment) {
       toast.error("Error sending comment", {
         autoClose: 2000,
       })
@@ -189,33 +198,33 @@ const Detail: React.FC<Props> = ({ id }) => {
                   <button className="absolute right-3" type="submit">
                     {loadingComment ? (
                       <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      className={`w-6 h-6 animate-spin`}
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                    </svg>
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        className={`w-6 h-6 animate-spin`}
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                      </svg>
                     ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      className={`w-6 h-6 stroke-slate-500 stroke-1`}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                      />
-                    </svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        className={`w-6 h-6 stroke-slate-500 stroke-1`}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                        />
+                      </svg>
                     )}
                   </button>
                 </div>
@@ -234,9 +243,7 @@ const Detail: React.FC<Props> = ({ id }) => {
                   </div>
                 ))
               ) : (
-                <div className="w-full">
-                  <h2>No hay comentarios</h2>
-                </div>
+                <h2>No hay comentarios</h2>
               )}
             </div>
           </div>
@@ -272,12 +279,23 @@ const Detail: React.FC<Props> = ({ id }) => {
                   <TelegramIcon round={true} size={40} />
                 </TelegramShareButton>
               </div>
-              <button
-                className="mt-2 py-2 px-20 rounded-lg bg-orange-500"
-                type="button"
-              >
-                <span>Save</span>
-              </button>
+              {isRecipeInFavorites ? (
+                <button
+                  className="mt-2 py-2 px-20 rounded-lg bg-orange-500"
+                  type="button"
+                  onClick={removeFav}
+                >
+                  <span>Saved</span>
+                </button>
+              ) : (
+                <button
+                  className="mt-2 py-2 px-20 rounded-lg bg-orange-500"
+                  type="button"
+                  onClick={addFav}
+                >
+                  <span>Save</span>
+                </button>
+              )}
               <button
                 className="mt-2 py-2 px-20 rounded-lg bg-orange-500"
                 type="button"

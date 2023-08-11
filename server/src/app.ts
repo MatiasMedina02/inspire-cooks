@@ -5,6 +5,7 @@ import cors from "cors"
 import userRouter from "./routes/user.routes"
 import recipeRouter from "./routes/recipe.routes"
 import commentRouter from "./routes/comment.routes"
+import favoriteRouter from "./routes/favorite.routes"
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.use(express.urlencoded({ limit: "100mb", extended: true }))
 app.use("/users", userRouter);
 app.use("/recipes", recipeRouter);
 app.use("/comments", commentRouter);
+app.use("/favorites", favoriteRouter);
 
 export default app

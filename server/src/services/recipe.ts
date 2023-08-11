@@ -6,7 +6,7 @@ import { Types } from "mongoose";
 import CommentModel from "../models/Comment";
 
 export const getAllRecipes = async () => {
-  const allRecipes = await RecipeModel.find({});
+  const allRecipes = await RecipeModel.find({}).sort({ createdAt: -1 });
 
   return allRecipes;
 };

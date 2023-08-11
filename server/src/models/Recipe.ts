@@ -74,6 +74,7 @@ const recipeSchema = new Schema<IRecipe>({
 	}],
 }, {
 	versionKey: false,
+	timestamps: true
 });
 
 const UserModel = model<IRecipe>("Recipe", recipeSchema)

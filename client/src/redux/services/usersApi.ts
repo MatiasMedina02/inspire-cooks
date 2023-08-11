@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { LoginData, User } from "../../types"
+import { IFavRecipe, LoginData, User } from "../../types"
 
 export const usersApi = createApi({
 	reducerPath: "usersApi",
@@ -27,7 +27,22 @@ export const usersApi = createApi({
 				body: userData,
 			}),
 		}),
+		addFavRecipe: builder.mutation<void, IFavRecipe>({
+			query: ({ idRecipe, idUser }) => ({
+				url: "/favorites",
+				method: "POST",
+				body: { idRecipe, idUser },
+			}),
+			invalidatesTags: []
+		}),
+		removeFavRecipe: builder.mutation<void, IFavRecipe>({
+			query: ({ idRecipe, idUser }) => ({
+				url: "/favorites",
+				method: "DELETE",
+				body: { idRecipe, idUser },
+			})
+		}),
 	})
 })
 
-export const { useGetAllUsersQuery, useLoginUserMutation, useRegisterUserMutation } = usersApi
+export const { useGetAllUsersQuery, useLoginUserMutation, useRegisterUserMutation, useAddFavRecipeMutation, useRemoveFavRecipeMutation } = usersApi
