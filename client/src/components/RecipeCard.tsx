@@ -21,6 +21,10 @@ const RecipeCard: React.FC<Props> = ({ id, title, image }) => {
 
 	const addFav = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.stopPropagation();
+		if(!userData?.user?.email){
+			setLocation("/login");
+			return;
+		}
 		handleAddFav(id, userData?.user?._id);
 	}
 

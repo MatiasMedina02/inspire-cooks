@@ -29,7 +29,7 @@ const Login: React.FC = () => {
   const [loginForm, { isLoading: loading, isError, isSuccess, data }] = useLoginUserMutation({});
   const [_, setLocation] = useLocation();
   const dispatch = useAppDispatch();
-  const { loginWithGoogle, loginWithFacebook, isLoading } = useAuth();
+  const { loginWithGoogle, loginWithFacebook, loadingLogin } = useAuth();
   const userData = useAppSelector(state => state.persistedReducer.user.userData);
 
   const onSubmit = async (user: LoginData) => {
@@ -71,7 +71,7 @@ const Login: React.FC = () => {
     }
   }, [isError, isSuccess]);
 
-  if (isLoading || loading){
+  if (loadingLogin || loading){
     return <Spinner />
   };
 

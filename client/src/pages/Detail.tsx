@@ -14,6 +14,7 @@ import {
   TelegramShareButton,
   TelegramIcon,
 } from "react-share";
+import { formatDistanceToNow } from "date-fns"
 import { useLocation } from "wouter";
 import { toast, ToastContainer } from "react-toastify";
 import { IComment } from "../types";
@@ -32,21 +33,32 @@ const Detail: React.FC<Props> = ({ id }) => {
   const url = window.location.href;
   const [_, setLocation] = useLocation();
   const [comment, setComment] = useState<string>("");
-  const [showButtons, setShowButtons] = useState(false);
+  const [showButtons, setShowButtons] = useState<boolean>(false);
+  const [currentComments, setCurrentComments] = useState<number>(1);
+  const [showComments, setShowComments] = useState<number>(5);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setComment(event.target.value);
   };
 
-  const addFav = (event: React.MouseEvent<HTMLButtonElement>) => {
-		event.stopPropagation();
-		handleAddFav(id, userData?.user?._id);
-	}
+  const handleShowComments = (newComments: number) => {
+    setCurrentComments(newComments);
+    setShowComments(newComments * 5);
+  }
 
-	const removeFav = (event: React.MouseEvent<HTMLButtonElement>) => {
-		event.stopPropagation();
-		handleRemoveFav(id, userData?.user?._id);
-	}
+  const addFav = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (!userData?.user?.email) {
+      setLocation("/login");
+      return;
+    }
+    handleAddFav(id, userData?.user?._id);
+  }
+
+  const removeFav = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    handleRemoveFav(id, userData?.user?._id);
+  }
 
   const handlePrint = () => {
     const printUrl = `/print/${data?._id}`;
@@ -232,18 +244,26 @@ const Detail: React.FC<Props> = ({ id }) => {
 
               {/* Comments */}
               {data.comments.length ? (
-                data.comments.map(comment => (
-                  <div key={comment._id}>
-                    <div className="flex items-center">
-                      <img className="w-8 rounded-full" src={comment.author.image.url} alt={comment.author.email} />
-                      <h4>{comment.author.firstName} {comment.author.lastName}</h4>
+                data.comments
+                  .slice(0, showComments)
+                  .map(comment => (
+                    <div className="py-2" key={comment._id}>
+                      <div className="flex items-center">
+                        <img className="w-8 rounded-full" src={comment.author.image.url} alt={comment.author.email} />
+                        <h4>{comment.author.firstName} {comment.author.lastName}</h4>
+                        <p>{comment.author.email}</p>
+                      </div>
+                      <h6>{formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}</h6>
+                      <span>{comment.text}</span>
                     </div>
-                    <p>{comment.author.email}</p>
-                    <span>{comment.text}</span>
-                  </div>
-                ))
+                  ))
               ) : (
-                <h2>No hay comentarios</h2>
+                <h2>No comments yet</h2>
+              )}
+              {data.comments.length > showComments && (
+                <button className="mt-2 p-2 rounded-lg bg-orange-500" type="button" onClick={() => handleShowComments(currentComments + 1)}>
+                  <span>Load More Comments</span>
+                </button>
               )}
             </div>
           </div>

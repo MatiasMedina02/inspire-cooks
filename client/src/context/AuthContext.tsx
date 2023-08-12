@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
@@ -17,7 +17,7 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<void>;
   loginWithFacebook: () => Promise<void>;
   logout: () => Promise<void>;
-  isLoading: boolean;
+  loadingLogin: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -35,9 +35,11 @@ export const AuthContextProvider = ({
 }) => {
   const [_, setLocation] = useLocation();
   const dispatch = useAppDispatch();
-  const [register, { data, isSuccess, isLoading }] = useRegisterUserMutation();
+  const [register, { data, isSuccess }] = useRegisterUserMutation();
+  const [loadingLogin, setLoadingLogin] = useState<boolean>(false);
 
   const getUserData = async () => {
+    setLoadingLogin(true);
     try {
       const result = await getRedirectResult(auth);
       if (result && result.user.displayName) {
@@ -55,10 +57,13 @@ export const AuthContextProvider = ({
       toast.error("You have registered with another method", {
         autoClose: 3000
       });
+    } finally {
+      setLoadingLogin(false);
     }
   };
 
   const loginWithGoogle = async () => {
+    setLoadingLogin(true);
     try {
       const provider = new GoogleAuthProvider();
       await signInWithRedirect(auth, provider);
@@ -68,6 +73,7 @@ export const AuthContextProvider = ({
   };
 
   const loginWithFacebook = async () => {
+    setLoadingLogin(true);
     try {
       const provider = new FacebookAuthProvider();
       await signInWithRedirect(auth, provider);
@@ -84,7 +90,7 @@ export const AuthContextProvider = ({
     loginWithGoogle,
     loginWithFacebook,
     logout,
-    isLoading
+    loadingLogin
   };
 
   useEffect(() => {
