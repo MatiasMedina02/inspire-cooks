@@ -29,6 +29,7 @@ export enum RecipeCategory {
   VegetarianAndVeganDishes = 'Vegetarian and Vegan Dishes',
   InternationalDishes = 'International Dishes',
   Breakfasts = 'Breakfasts',
+	Soups = "Soups"
 }
 
 export interface ImageCloudinary {
