@@ -31,8 +31,11 @@ export const recipesApi = createApi({
 				body: comment
 			}),
 			invalidatesTags: ["RecipeWithId"]
-		})
+		}),
+		searchRecipe: builder.query<IRecipeWithId[], string>({
+			query: (title) => `/recipes?title=${title}`,
+		}),
 	})
 })
 
-export const { useGetAllRecipesQuery, usePostRecipeMutation, useGetRecipeByIdQuery, usePostCommentMutation } = recipesApi
+export const { useGetAllRecipesQuery, usePostRecipeMutation, useGetRecipeByIdQuery, usePostCommentMutation, useSearchRecipeQuery } = recipesApi

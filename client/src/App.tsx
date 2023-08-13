@@ -12,6 +12,7 @@ import Detail from "./pages/Detail";
 import CreateRecipe from "./pages/CreateRecipe";
 import PageNotFound from "./pages/PageNotFound";
 import PrintRecipe from "./pages/PrintRecipe";
+import Search from "./pages/Search";
 
 const App: React.FC = () => {
   const [location, _] = useLocation();
@@ -38,6 +39,7 @@ const App: React.FC = () => {
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/create" component={CreateRecipe} />
+        <Route path="/search" component={Search} />
         <Route component={PageNotFound} />
       </Switch>
 

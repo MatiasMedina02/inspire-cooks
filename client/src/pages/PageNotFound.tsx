@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import PageNotFoundImg from "../assets/pageNotFound.png";
 
-const PageNotFound = () => {
+const PageNotFound: React.FC = () => {
 	const [_, setLocation] = useLocation()
 
 	return (

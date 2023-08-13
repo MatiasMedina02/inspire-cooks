@@ -33,7 +33,9 @@ export interface IRecipe {
   category: RecipeCategory;
   prepTime: number;
   cookTime: number;
-  servings: number; 
+  totalTime: number;
+  servings: number;
+  createdAt: Date;
 }
 
 export interface ICreateRecipe extends IRecipe {

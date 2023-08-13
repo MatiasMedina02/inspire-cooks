@@ -5,7 +5,15 @@ import UserModel from "../models/User";
 import { Types } from "mongoose";
 import CommentModel from "../models/Comment";
 
-export const getAllRecipes = async () => {
+export const getAllRecipes = async (title: string) => {
+  if(title){
+    const searchRecipes = await RecipeModel.find({ title: { $regex: `^${title}`, $options: "i" } }).sort({ createdAt: -1 });
+    
+    if(!searchRecipes.length) throw new Error("Recipes not found");
+
+    return searchRecipes;
+  }
+
   const allRecipes = await RecipeModel.find({}).sort({ createdAt: -1 });
 
   return allRecipes;

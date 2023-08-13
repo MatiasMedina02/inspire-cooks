@@ -11,9 +11,11 @@ type Props = {
 	id: string
 	title: string
 	image: imageProps
+	category: string
+	totalTime: number
 }
 
-const RecipeCard: React.FC<Props> = ({ id, title, image }) => {
+const RecipeCard: React.FC<Props> = ({ id, title, image, category, totalTime }) => {
 	const [_, setLocation] = useLocation();
 	const userData = useAppSelector(state => state.persistedReducer.user.userData);
 	const isRecipeInFavorites = userData?.user?.favorites.includes(id);
@@ -21,7 +23,7 @@ const RecipeCard: React.FC<Props> = ({ id, title, image }) => {
 
 	const addFav = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.stopPropagation();
-		if(!userData?.user?.email){
+		if (!userData?.user?.email) {
 			setLocation("/login");
 			return;
 		}
@@ -53,7 +55,14 @@ const RecipeCard: React.FC<Props> = ({ id, title, image }) => {
 			</div>
 
 			<div className="w-full h-full p-2 flex flex-col justify-between">
-				<h4 className="pb-2">{title}</h4>
+				<span className="text-orange-500">{category}</span>
+				<h4>{title}</h4>
+				<div className="w-full flex">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+						<path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+					<h5> {totalTime} mins</h5>
+				</div>
 			</div>
 		</div>
 	)
