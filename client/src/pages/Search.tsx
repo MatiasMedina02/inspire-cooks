@@ -2,13 +2,14 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { useSearchRecipeQuery } from "../redux/services/recipesApi";
 import RecipeCard from "../components/RecipeCard";
+import Spinner from "../components/Spinner";
 
 const Search: React.FC = () => {
   const [recipeTitle, setRecipeTitle] = useState<string>("");
   const [_, setLocation] = useLocation();
   const urlSearchParams = new URLSearchParams(location.search);
   const title = urlSearchParams.get("title");
-  const { data, isSuccess } = useSearchRecipeQuery(title || "");
+  const { data, isSuccess, isLoading } = useSearchRecipeQuery(title || "");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRecipeTitle(event.target.value);
@@ -29,6 +30,7 @@ const Search: React.FC = () => {
           <span className="text-white">Search</span>
         </button>
       </form>
+      {isLoading && <Spinner />}
       {isSuccess ? (
         <div className="w-full p-6 flex flex-col">
           <h2>Search Results</h2>
