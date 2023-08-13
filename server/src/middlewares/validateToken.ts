@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
-import { Payload } from "../types"
+import { IPayload } from "../types"
 
 interface RequestWithUserId extends Request {
 	userId?: string
@@ -13,7 +13,7 @@ export const validateToken = (req: RequestWithUserId, res: Response, next: NextF
 	if(!token) return res.status(400).json({ error: "Access denied" });
 
 	try {
-		const payload = jwt.verify(token, JWT_SECRET) as Payload;
+		const payload = jwt.verify(token, JWT_SECRET) as IPayload;
 		req.userId = payload._id
 		next();
 	} catch (error) {
