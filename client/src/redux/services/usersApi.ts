@@ -4,7 +4,8 @@ import { IFavRecipe, LoginData, User } from "../../types"
 export const usersApi = createApi({
 	reducerPath: "usersApi",
 	baseQuery: fetchBaseQuery({
-		baseUrl: "http://localhost:3001",
+		// baseUrl: "http://localhost:3001",
+		baseUrl: "https://inspire-cooks.vercel.app",
 	}),
 	tagTypes: ["Users"],
 	endpoints: (builder) => ({

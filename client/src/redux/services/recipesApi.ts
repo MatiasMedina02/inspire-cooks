@@ -4,7 +4,8 @@ import { IComment, ICreateRecipe, IPostComment, IRecipeWithAll } from "../../typ
 export const recipesApi = createApi({
 	reducerPath: "recipesApi",
 	baseQuery: fetchBaseQuery({
-		baseUrl: "http://localhost:3001",
+		// baseUrl: "http://localhost:3001",
+		baseUrl: "https://inspire-cooks.vercel.app",
 	}),
 	tagTypes: ["Recipes", "RecipeWithId"],
 	endpoints: (builder) => ({
