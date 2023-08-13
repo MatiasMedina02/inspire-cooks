@@ -33,20 +33,20 @@ export interface IRecipe {
   category: RecipeCategory;
   prepTime: number;
   cookTime: number;
-  totalTime: number;
   servings: number;
-  createdAt: Date;
 }
 
 export interface ICreateRecipe extends IRecipe {
   image: string
 }
 
-export interface IRecipeWithId extends IRecipe {
+export interface IRecipeWithAll extends IRecipe {
   _id: string;
   image: ImageCloudinary;
   author: User;
-  comments: IGetComment[]
+  comments: IGetComment[];
+  totalTime: number;
+  createdAt: Date;
 }
 
 export interface RegisterData {

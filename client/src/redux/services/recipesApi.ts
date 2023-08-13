@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { IComment, ICreateRecipe, IPostComment, IRecipeWithId } from "../../types"
+import { IComment, ICreateRecipe, IPostComment, IRecipeWithAll } from "../../types"
 
 export const recipesApi = createApi({
 	reducerPath: "recipesApi",
@@ -8,11 +8,11 @@ export const recipesApi = createApi({
 	}),
 	tagTypes: ["Recipes", "RecipeWithId"],
 	endpoints: (builder) => ({
-		getAllRecipes: builder.query<IRecipeWithId[], null>({
+		getAllRecipes: builder.query<IRecipeWithAll[], null>({
 			query: () => "/recipes",
 			providesTags: ["Recipes"],
 		}),
-		getRecipeById: builder.query<IRecipeWithId, string>({
+		getRecipeById: builder.query<IRecipeWithAll, string>({
 			query: (id: string) => `/recipes/${id}`,
 			providesTags: ["RecipeWithId"],
 		}),
@@ -32,7 +32,7 @@ export const recipesApi = createApi({
 			}),
 			invalidatesTags: ["RecipeWithId"]
 		}),
-		searchRecipe: builder.query<IRecipeWithId[], string>({
+		searchRecipe: builder.query<IRecipeWithAll[], string>({
 			query: (title) => `/recipes?title=${title}`,
 		}),
 	})
