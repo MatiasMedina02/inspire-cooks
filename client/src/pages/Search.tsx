@@ -30,7 +30,8 @@ const Search: React.FC = () => {
         </button>
       </form>
       {isSuccess ? (
-        <div className="flex flex-wrap">
+        <div className="w-full p-6 flex flex-col">
+          <h2>Search Results</h2>
           {data.map((recipe) => (
             <RecipeCard
               key={recipe.title}
