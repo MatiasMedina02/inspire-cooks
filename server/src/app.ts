@@ -20,4 +20,8 @@ app.use("/recipes", recipeRouter);
 app.use("/comments", commentRouter);
 app.use("/favorites", favoriteRouter);
 
+app.get("/", (req, res) => {
+  res.send("Hola Mundo")
+})
+
 export default app
