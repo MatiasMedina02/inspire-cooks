@@ -150,6 +150,10 @@ const Detail: React.FC<Props> = ({ id }) => {
                 <span>{data.cookTime} min</span>
               </div>
               <div className="">
+                <h3>Total Time:</h3>
+                <span>{data.totalTime} min</span>
+              </div>
+              <div className="">
                 <h3>Servings:</h3>
                 <span>{data.servings}</span>
               </div>
@@ -213,14 +217,13 @@ const Detail: React.FC<Props> = ({ id }) => {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        className={`w-6 h-6 animate-spin`}
+                        className="w-6 h-6 animate-spin"
                       >
                         <circle
-                          className="opacity-25"
+                          className="opacity-25 stroke-orange-600"
                           cx="12"
                           cy="12"
                           r="10"
-                          stroke="currentColor"
                           strokeWidth="4"
                         ></circle>
                       </svg>
@@ -229,7 +232,7 @@ const Detail: React.FC<Props> = ({ id }) => {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        className={`w-6 h-6 stroke-slate-500 stroke-1`}
+                        className="w-6 h-6 stroke-slate-500 stroke-1"
                       >
                         <path
                           strokeLinecap="round"

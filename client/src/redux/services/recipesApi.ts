@@ -4,13 +4,17 @@ import { IComment, ICreateRecipe, IPostComment, IRecipeWithAll } from "../../typ
 export const recipesApi = createApi({
 	reducerPath: "recipesApi",
 	baseQuery: fetchBaseQuery({
-		// baseUrl: "http://localhost:3001",
-		baseUrl: "https://inspire-cooks.vercel.app",
+		baseUrl: "http://localhost:3001",
+		// baseUrl: "https://inspire-cooks.vercel.app",
 	}),
 	tagTypes: ["Recipes", "RecipeWithId"],
 	endpoints: (builder) => ({
 		getAllRecipes: builder.query<IRecipeWithAll[], null>({
 			query: () => "/recipes",
+			providesTags: ["Recipes"],
+		}),
+		getAllRecipesCreated: builder.query<IRecipeWithAll[], string>({
+			query: (idUser) => `/recipes/created/${idUser}`,
 			providesTags: ["Recipes"],
 		}),
 		getRecipeById: builder.query<IRecipeWithAll, string>({
@@ -22,6 +26,13 @@ export const recipesApi = createApi({
 				url: "/recipes",
 				method: "POST",
 				body: recipe,
+			}),
+			invalidatesTags: ["Recipes"]
+		}),
+		deleteRecipe: builder.mutation<string, string>({
+			query: (idRecipe) => ({
+				url: `/recipes/${idRecipe}`,
+				method: "DELETE",
 			}),
 			invalidatesTags: ["Recipes"]
 		}),
@@ -39,4 +50,12 @@ export const recipesApi = createApi({
 	})
 })
 
-export const { useGetAllRecipesQuery, usePostRecipeMutation, useGetRecipeByIdQuery, usePostCommentMutation, useSearchRecipeQuery } = recipesApi
+export const { 
+	useGetAllRecipesQuery, 
+	useGetAllRecipesCreatedQuery,
+	usePostRecipeMutation, 
+	useGetRecipeByIdQuery, 
+	useDeleteRecipeMutation,
+	usePostCommentMutation, 
+	useSearchRecipeQuery 
+} = recipesApi

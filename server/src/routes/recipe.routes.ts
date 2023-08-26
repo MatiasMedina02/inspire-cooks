@@ -1,11 +1,13 @@
 import { Router } from "express"
 const router = Router();
 
-import { deleteRecipeController, getAllRecipesController, getRecipeByIdController, postRecipeController, updateRecipeController } from "../controllers/recipe.controller";
+import { deleteRecipeController, getAllRecipesController, getAllUserRecipesController, getRecipeByIdController, postRecipeController, updateRecipeController } from "../controllers/recipe.controller";
 
 router.get("/", getAllRecipesController);
 
 router.get("/:id", getRecipeByIdController);
+
+router.get("/created/:idUser", getAllUserRecipesController)
 
 router.post("/", postRecipeController);
 

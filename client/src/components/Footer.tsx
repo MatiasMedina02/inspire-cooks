@@ -9,7 +9,7 @@ const Footer = () => {
 		setEmail(event.target.value);
 	}
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+	const handleSuscribe = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		try {
 			console.log(email);
@@ -37,7 +37,7 @@ const Footer = () => {
         <div className="w-1/3">
           <h3>Ready to cook?</h3>
           <p>Sign up for our weekly newsletters!</p>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSuscribe}>
             <input
               className="p-2 border"
               type="email"

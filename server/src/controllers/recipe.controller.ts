@@ -1,10 +1,20 @@
 import { RequestHandler } from "express";
-import { deleteRecipe, getAllRecipes, getRecipeById, postRecipe, updateRecipe } from "../services/recipe";
+import { deleteRecipe, getAllRecipes, getAllUserRecipes, getRecipeById, postRecipe, updateRecipe } from "../services/recipe";
 
 export const getAllRecipesController: RequestHandler = async (req, res) => {
 	const title = req.query.title as string;
 	try {
 		const response = await getAllRecipes(title);
+		res.status(200).json(response);
+	} catch (error) {
+		res.status(400).json({ error: (error as Error).message });
+	}
+}
+
+export const getAllUserRecipesController: RequestHandler = async (req, res) => {
+	const { idUser } = req.params;
+	try {
+		const response = await getAllUserRecipes(idUser);
 		res.status(200).json(response);
 	} catch (error) {
 		res.status(400).json({ error: (error as Error).message });

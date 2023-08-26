@@ -19,6 +19,15 @@ export const getAllRecipes = async (title: string) => {
   return allRecipes;
 };
 
+export const getAllUserRecipes = async (idUser: string) => {
+	const userFound = await UserModel.findById(idUser);
+	if (!userFound) throw new Error("User not found");
+
+	const userRecipes = await RecipeModel.find({ _id: { $in: userFound.recipes } });
+
+	return userRecipes;
+}
+
 export const getRecipeById = async (id: string) => {
   const recipeFound = await RecipeModel.findById(id).populate("author").exec();
   if (!recipeFound) throw new Error("Recipe not found");
@@ -60,7 +69,7 @@ export const postRecipe = async ({
     category,
     prepTime,
     cookTime,
-    totalTime: prepTime + cookTime,
+    totalTime: Number(prepTime) + Number(cookTime),
     servings,
     author: user._id,
   });
@@ -75,15 +84,13 @@ export const deleteRecipe = async (id: string) => {
   const recipeFound = await RecipeModel.findById(id);
   if (!recipeFound) throw new Error("Recipe not found");
 
-  if (recipeFound.image) {
-    await cloudinary.uploader.destroy(recipeFound.image.public_id);
-  }
+  await cloudinary.uploader.destroy(recipeFound.image.public_id);
 
   await UserModel.updateMany({ recipes: new Types.ObjectId(id) }, { $pull: { recipes: new Types.ObjectId(id) } })
 
   const recipe = await RecipeModel.findByIdAndDelete(id);
 
-  return recipe;
+  return `Recipe: ${recipe?.title} deleted successfully`;
 };
 
 export const updateRecipe = async (
