@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { IFavRecipe, IRecipeWithAll, LoginData, User } from "../../types"
+import { IFavRecipe, IRecipeWithAll, LoginData, RegisterData, User } from "../../types"
 
 export const usersApi = createApi({
 	reducerPath: "usersApi",
@@ -13,7 +13,7 @@ export const usersApi = createApi({
 			query: () => "/users",
 			providesTags: ["Users"]
 		}),
-		registerUser: builder.mutation<User, object>({
+		registerUser: builder.mutation<RegisterData, object>({
 			query: (userData) => ({
 				url: "/users/register",
 				method: "POST",

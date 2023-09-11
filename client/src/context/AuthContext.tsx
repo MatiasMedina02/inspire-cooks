@@ -96,7 +96,8 @@ export const AuthContextProvider = ({
   useEffect(() => {
     getUserData();
   }, []);
-
+  
+  
   useEffect(() => {
     if(isSuccess){
       dispatch(login({ user: data }));

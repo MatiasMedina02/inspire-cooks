@@ -13,7 +13,7 @@ const ProfileInfo: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex pt-2 space-x-14">
         <div className="">
           <h3>First Name</h3>
           <span>{userData?.user?.firstName}</span>
@@ -24,12 +24,16 @@ const ProfileInfo: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex py-2">
         <div className="">
           <h3>Email</h3>
           <span>{userData?.user?.email}</span>
         </div>
       </div>
+
+      <button className="p-2 bg-orange-500 rounded-md" onClick={() => { }}>
+        <span>Save changes</span>
+      </button>
     </div>
   )
 }

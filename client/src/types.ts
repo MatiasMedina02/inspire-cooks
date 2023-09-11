@@ -54,6 +54,7 @@ export interface RegisterData {
   lastName: string;
   email: string;
   password: string;
+  termsAndConditions: boolean | undefined
 }
 
 export interface User extends RegisterData {

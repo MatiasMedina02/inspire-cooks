@@ -18,7 +18,7 @@ type Props = {
 const RecipeCard: React.FC<Props> = ({ id, title, image, category, totalTime }) => {
 	const [_, setLocation] = useLocation();
 	const userData = useAppSelector(state => state.persistedReducer.user.userData);
-	const isRecipeInFavorites = userData?.user?.favorites.includes(id);
+	const isRecipeInFavorites = userData?.user?.favorites?.includes(id);
 	const { handleAddFav, handleRemoveFav } = useFav();
 
 	const addFav = (event: React.MouseEvent<HTMLButtonElement>) => {

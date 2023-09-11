@@ -1,10 +1,10 @@
 import { ICreateUser } from "../types";
 import UserModel from "../models/User";
 import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
 import cloudinary from "../utils/cloudinary";
+// import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "jsiow82ka";
+// const JWT_SECRET = process.env.JWT_SECRET || "jsiow82ka";
 
 export const registerUser = async (
   { firstName, lastName, email, password, image }: ICreateUser,
@@ -49,9 +49,10 @@ export const loginUser = async ({ email, password }: ICreateUser) => {
   );
   if(!verifyPassword) throw new Error("Incorrect password");
 
-  const token: string = jwt.sign({ _id: userExists._id }, JWT_SECRET, {
-    expiresIn: "2h",
-  });
+  // const token: string = jwt.sign({ _id: userExists._id }, JWT_SECRET, {
+  //   expiresIn: "2h",
+  // });
 
-  return { token, user: userExists };
+  // return { token, user: userExists };
+  return userExists;
 };

@@ -27,6 +27,7 @@ const userSchema = new Schema<IUser>({
 		required: true,
 		trim: true,
 		unique: true,
+		lowercase: true
 	},
 	password: {
 		type: String,
@@ -34,11 +35,9 @@ const userSchema = new Schema<IUser>({
 	image: {
 		public_id: {
 		  type: String,
-			required: true,
 		},
 		url: {
 		  type: String,
-			required: true,
 			default: "https://img.freepik.com/premium-vector/flat-instagram-icons-notifications_619991-50.jpg"
 		},
 	},
