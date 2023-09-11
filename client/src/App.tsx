@@ -1,7 +1,8 @@
 import { Switch, Route, useLocation } from "wouter";
 import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+// import { useAppSelector } from "./redux/hooks";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 
@@ -15,11 +16,10 @@ import PageNotFound from "./pages/PageNotFound";
 import PrintRecipe from "./pages/PrintRecipe";
 import Search from "./pages/Search";
 import Profile from "./pages/Profile";
-import { useAppSelector } from "./redux/hooks";
 
 const App: React.FC = () => {
   const [location, _] = useLocation();
-  const userData = useAppSelector(state => state.persistedReducer.user.userData);
+  // const userData = useAppSelector(state => state.persistedReducer.user.userData);
 
   useEffect(() => {
     window.scrollTo({
@@ -28,13 +28,13 @@ const App: React.FC = () => {
     });
   }, [location]);
 
-  useEffect(() => {
-    if(userData?.user?.firstName){
-      toast.success(`Welcome ${userData?.user?.firstName} ${userData?.user?.lastName}`, {
-        autoClose: 3000,
-      });
-    }
-  }, [userData])
+  // useEffect(() => {
+  //   if(userData?.user?.firstName){
+  //     toast.success(`Welcome ${userData?.user?.firstName} ${userData?.user?.lastName}`, {
+  //       autoClose: 3000,
+  //     });
+  //   }
+  // }, [])
 
   return (
     <div className="w-full min-h-screen">

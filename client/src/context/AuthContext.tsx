@@ -83,7 +83,11 @@ export const AuthContextProvider = ({
   };
 
   const logout = async () => {
-    await signOut(auth);
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const authContextValue: AuthContextType = {
@@ -96,7 +100,6 @@ export const AuthContextProvider = ({
   useEffect(() => {
     getUserData();
   }, []);
-  
   
   useEffect(() => {
     if(isSuccess){
