@@ -6,7 +6,7 @@ const ProfileInfo: React.FC = () => {
   return (
     <div className="w-full p-4">
       <div className="w-full flex">
-        <img className="rounded-full" src={userData?.user?.image.url} alt={userData?.user?.email} />
+        <img className="w-24 rounded-full" src={userData?.user?.image.url} alt={userData?.user?.email} />
         <div className="pl-4">
           <h2>{userData?.user?.firstName} {userData?.user?.lastName}</h2>
           <span>{userData?.user?.email}</span>

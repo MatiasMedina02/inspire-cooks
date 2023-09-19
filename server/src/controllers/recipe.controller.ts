@@ -55,10 +55,9 @@ export const deleteRecipeController: RequestHandler = async (req, res) => {
 
 export const updateRecipeController: RequestHandler = async (req, res) => {
 	const { id } = req.params;
-	const { recipe } = req.body;
 	
 	try {
-		const response = await updateRecipe(id, recipe);
+		const response = await updateRecipe(id, req.body);
 		res.status(200).json(response);
 	} catch (error) {
 		res.status(400).json({ error: (error as Error).message });

@@ -1,7 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
 import { persistReducer, persistStore } from "redux-persist";
-import storage from 'redux-persist/lib/storage'
+// import storage from 'redux-persist/lib/storage'
+import sessionStorage from "redux-persist/es/storage/session";
 
 // Api backend
 import { recipesApi } from "./services/recipesApi";
@@ -14,7 +15,7 @@ const rootReducer = combineReducers({ user: userReducer })
 
 const persistConfig = {
 	key: "root",
-	storage
+	storage: sessionStorage
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

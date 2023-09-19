@@ -23,7 +23,7 @@ export const getAllUserRecipes = async (idUser: string) => {
 	const userFound = await UserModel.findById(idUser);
 	if (!userFound) throw new Error("User not found");
 
-	const userRecipes = await RecipeModel.find({ _id: { $in: userFound.recipes } });
+	const userRecipes = await RecipeModel.find({ _id: { $in: userFound.recipes } }).sort({ createdAt: -1 });
 
 	return userRecipes;
 }
